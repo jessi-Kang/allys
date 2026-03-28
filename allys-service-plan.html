@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Allys — 서비스 기획서 v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-alt: #1a1a26;
+    --border: #2a2a3a;
+    --text: #e8e8f0;
+    --text-dim: #8888a0;
+    --text-bright: #ffffff;
+    --accent-1: #7c6cf0;
+    --accent-1-dim: rgba(124,108,240,0.15);
+    --accent-2: #f06c8e;
+    --accent-2-dim: rgba(240,108,142,0.12);
+    --accent-3: #6cf0c8;
+    --accent-3-dim: rgba(108,240,200,0.12);
+    --accent-4: #f0d06c;
+    --accent-4-dim: rgba(240,208,108,0.12);
+    --accent-5: #8ec5fc;
+    --accent-5-dim: rgba(142,197,252,0.12);
+    --gradient-hero: linear-gradient(135deg, #7c6cf0 0%, #f06c8e 50%, #6cf0c8 100%);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  nav .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; color: var(--text-bright);
+    letter-spacing: -0.5px; flex-shrink: 0;
+  }
+  nav .logo span { background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  nav ul { list-style: none; display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  nav ul li a {
+    color: var(--text-dim); text-decoration: none; font-size: 12px; font-weight: 400;
+    padding: 5px 10px; border-radius: 20px; transition: all 0.3s; white-space: nowrap;
+  }
+  nav ul li a:hover { color: var(--text-bright); background: rgba(255,255,255,0.06); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    padding: 120px 40px 80px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -40%; left: -20%; width: 140%; height: 140%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(124,108,240,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(240,108,142,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(108,240,200,0.04) 0%, transparent 50%);
+    animation: bgPulse 12s ease-in-out infinite alternate;
+  }
+  @keyframes bgPulse {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.08) rotate(2deg); }
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 20px; border-radius: 40px;
+    background: var(--accent-1-dim); border: 1px solid rgba(124,108,240,0.25);
+    font-size: 13px; color: var(--accent-1); font-weight: 500;
+    margin-bottom: 32px;
+  }
+  .hero .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-1); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 6vw, 72px); font-weight: 700;
+    line-height: 1.15; letter-spacing: -2px;
+    color: var(--text-bright); margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero .subtitle {
+    font-size: 17px; color: var(--text-dim); max-width: 560px; line-height: 1.8;
+    margin-bottom: 48px;
+  }
+  .hero .meta-row {
+    display: flex; gap: 40px; font-size: 13px; color: var(--text-dim);
+  }
+  .hero .meta-row strong { color: var(--text); font-weight: 500; }
+
+  .update-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 6px;
+    background: var(--accent-3-dim); border: 1px solid rgba(108,240,200,0.25);
+    font-size: 11px; color: var(--accent-3); font-weight: 500;
+    margin-left: 8px; vertical-align: middle;
+  }
+  .update-badge.v12 { background: var(--accent-2-dim); border-color: rgba(240,108,142,0.25); color: var(--accent-2); }
+
+  /* ── TOC ── */
+  .toc { max-width: 900px; margin: 0 auto; padding: 0 40px 80px; }
+  .toc-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
+  }
+  .toc-grid a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px; border-radius: var(--radius-sm);
+    background: var(--bg-card); border: 1px solid var(--border);
+    text-decoration: none; color: var(--text); font-size: 13px; font-weight: 400;
+    transition: all 0.3s;
+  }
+  .toc-grid a:hover { border-color: var(--accent-1); background: var(--accent-1-dim); }
+  .toc-grid a .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--accent-1); font-weight: 500;
+  }
+
+  /* ── SECTIONS ── */
+  .content { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+  section { margin-bottom: 100px; }
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 40px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    padding: 6px 12px; border-radius: 8px; font-weight: 500;
+  }
+  .section-num.purple { background: var(--accent-1-dim); color: var(--accent-1); }
+  .section-num.pink { background: var(--accent-2-dim); color: var(--accent-2); }
+  .section-num.green { background: var(--accent-3-dim); color: var(--accent-3); }
+  .section-num.gold { background: var(--accent-4-dim); color: var(--accent-4); }
+  .section-num.blue { background: var(--accent-5-dim); color: var(--accent-5); }
+
+  .section-header h2 {
+    font-size: 26px; font-weight: 700; color: var(--text-bright);
+    letter-spacing: -0.5px;
+  }
+
+  .subsection { margin-bottom: 48px; }
+  .subsection h3 {
+    font-size: 18px; font-weight: 700; color: var(--text-bright);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .subsection h3 .icon { font-size: 20px; }
+  .subsection p { color: var(--text); margin-bottom: 12px; }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px; margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+  .card:hover { border-color: rgba(124,108,240,0.3); }
+  .card h4 {
+    font-size: 15px; font-weight: 700; color: var(--text-bright);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .card p { font-size: 14px; color: var(--text-dim); line-height: 1.75; }
+  .card .tag, .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 6px;
+    font-size: 11px; font-weight: 500; margin-right: 6px; margin-top: 8px;
+  }
+  .tag-purple { background: var(--accent-1-dim); color: var(--accent-1); }
+  .tag-pink { background: var(--accent-2-dim); color: var(--accent-2); }
+  .tag-green { background: var(--accent-3-dim); color: var(--accent-3); }
+  .tag-gold { background: var(--accent-4-dim); color: var(--accent-4); }
+  .tag-blue { background: var(--accent-5-dim); color: var(--accent-5); }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 700px) { .card-grid, .card-grid.triple { grid-template-columns: 1fr; } }
+
+  .table-wrap {
+    overflow-x: auto; margin: 20px 0;
+    border: 1px solid var(--border); border-radius: var(--radius);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead { background: var(--bg-card-alt); }
+  th {
+    text-align: left; padding: 14px 20px; font-weight: 600;
+    color: var(--text-bright); font-size: 13px; white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    color: var(--text); vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,108,240,0.03); }
+
+  .flow {
+    display: flex; align-items: center; gap: 0;
+    flex-wrap: wrap; margin: 24px 0;
+  }
+  .flow-step {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 20px;
+    font-size: 13px; color: var(--text); text-align: center;
+    min-width: 120px;
+  }
+  .flow-step strong { display: block; color: var(--text-bright); font-size: 14px; margin-bottom: 4px; }
+  .flow-arrow { color: var(--accent-1); font-size: 20px; padding: 0 8px; flex-shrink: 0; }
+
+  .callout {
+    border-left: 3px solid var(--accent-1);
+    background: var(--accent-1-dim);
+    padding: 20px 24px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 24px 0;
+  }
+  .callout.pink { border-left-color: var(--accent-2); background: var(--accent-2-dim); }
+  .callout.green { border-left-color: var(--accent-3); background: var(--accent-3-dim); }
+  .callout.gold { border-left-color: var(--accent-4); background: var(--accent-4-dim); }
+  .callout.blue { border-left-color: var(--accent-5); background: var(--accent-5-dim); }
+  .callout strong { color: var(--text-bright); }
+  .callout p { font-size: 14px; color: var(--text); margin: 0; }
+
+  .metric-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 24px 0; }
+  .metric {
+    flex: 1; min-width: 140px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 20px; text-align: center;
+  }
+  .metric .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px; font-weight: 700; color: var(--accent-1);
+    margin-bottom: 4px;
+  }
+  .metric .label { font-size: 12px; color: var(--text-dim); }
+
+  .detail-list { list-style: none; padding: 0; }
+  .detail-list li {
+    padding: 10px 0; border-bottom: 1px solid rgba(42,42,58,0.5);
+    font-size: 14px; color: var(--text); display: flex; gap: 10px;
+  }
+  .detail-list li::before {
+    content: '→'; color: var(--accent-1); font-weight: 700; flex-shrink: 0;
+  }
+  .detail-list li:last-child { border-bottom: none; }
+
+  .divider {
+    height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 80px 0;
+  }
+
+  /* ── PERSONA CARD ── */
+  .persona-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 0; margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .persona-card .pc-header {
+    padding: 20px 28px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .persona-card .pc-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+  }
+  .persona-card .pc-name { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+  .persona-card .pc-bio { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+  .persona-card .pc-body { padding: 20px 28px; }
+  .persona-card .pc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+
+  /* ── TECH STACK ── */
+  .stack-layer {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 12px;
+    display: grid; grid-template-columns: 140px 1fr; gap: 20px;
+    align-items: start;
+  }
+  .stack-layer .layer-name {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    font-weight: 500; padding: 6px 12px; border-radius: 8px;
+    text-align: center; white-space: nowrap;
+  }
+  .stack-layer .layer-content { font-size: 14px; color: var(--text); }
+  .stack-layer .layer-content strong { color: var(--text-bright); }
+  .stack-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 500;
+    background: var(--bg-card-alt); border: 1px solid var(--border);
+    color: var(--text);
+  }
+  @media (max-width: 700px) { .stack-layer { grid-template-columns: 1fr; } }
+
+  footer {
+    text-align: center; padding: 60px 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim); font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 20px; }
+    nav ul { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    .hero .meta-row { flex-direction: column; gap: 8px; }
+    .toc, .content { padding: 0 20px; }
+    .section-header h2 { font-size: 22px; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .metric .value { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><span>Allys</span> &nbsp;기획서</div>
+  <ul>
+    <li><a href="#overview">개요</a></li>
+    <li><a href="#ux">UX 구조</a></li>
+    <li><a href="#character">캐릭터</a></li>
+    <li><a href="#conversation">대화</a></li>
+    <li><a href="#network">소셜</a></li>
+    <li><a href="#gift">선물</a></li>
+    <li><a href="#boundary">경계 허물기</a></li>
+    <li><a href="#biz">비즈니스</a></li>
+    <li><a href="#tech">기술</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Service Planning Document v2.0</div>
+  <h1>릴스에서 발견하고 <br>DM으로 친구가 되는 <em>Allys</em></h1>
+  <p class="subtitle">
+    모든 캐릭터가 당신의 Ally.<br>
+    나이를 먹고, 가끔 읽씹하고, 때로는 차단도 하는 진짜 같은 친구들.
+  </p>
+  <div class="meta-row">
+    <span><strong>Target</strong> MZ세대 (18-34)</span>
+    <span><strong>UX Model</strong> Reels-like Feed → Follow → DM</span>
+    <span><strong>Stage</strong> Concept Design</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-grid">
+    <a href="#overview"><span class="num">00</span> 서비스 개요</a>
+    <a href="#ux"><span class="num">01</span> UX 구조</a>
+    <a href="#character"><span class="num">02</span> 캐릭터 설계</a>
+    <a href="#conversation"><span class="num">03</span> 대화 시스템</a>
+    <a href="#network"><span class="num">04</span> 소셜 네트워크</a>
+    <a href="#gift"><span class="num">05</span> 선물 경제</a>
+    <a href="#boundary"><span class="num">06</span> 경계 허물기</a>
+    <a href="#biz"><span class="num">07</span> 비즈니스 모델</a>
+    <a href="#tech"><span class="num">08</span> 기술 구현</a>
+    <a href="#roadmap"><span class="num">09</span> 로드맵</a>
+    <a href="#kpi"><span class="num">10</span> 핵심 지표</a>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 00. 서비스 개요 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="overview">
+  <div class="section-header">
+    <span class="section-num purple">00</span>
+    <h2>서비스 개요</h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🎯</span> 핵심 컨셉</h3>
+    <p>
+      Allys(앨리스)는 Ally(내 편)의 복수형으로, <strong>"모든 캐릭터가 당신의 Ally"</strong>라는 의미를 담고 있습니다.
+      피드를 스크롤하다가 매력적인 캐릭터의 포스팅을 발견하고, 팔로우하고, DM을 보내 관계를 시작합니다.
+      캐릭터는 운영자가 기획·제공하는 프로페셔널 캐릭터로, 각기 다른 성격·배경·생활을 가진 개성 넘치는 존재들입니다.
+    </p>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🔄</span> 핵심 사용자 여정</h3>
+    <div class="flow">
+      <div class="flow-step"><strong>피드 탐색</strong>캐릭터들의 포스팅<br>발견</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>프로필 확인</strong>캐릭터의 일상·성격<br>탐색</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>팔로우</strong>캐릭터의 피드<br>구독</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>DM 시작</strong>"안녕, 피드 보고<br>DM 보냈어!"</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>관계 심화</strong>대화·선물·<br>공유 경험</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">💡</span> 기존 서비스와의 차별점</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>구분</th><th>기존 AI 캐릭터 서비스</th><th>Allys</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>캐릭터 생성</td><td>사용자가 직접 만들거나 커뮤니티 제작</td><td><strong>운영자가 기획·제공</strong>하는 프로페셔널 캐릭터만 존재</td></tr>
+          <tr><td>발견 경로</td><td>카탈로그에서 검색·선택</td><td><strong>릴스형 피드에서 캐릭터의 일상을 자연스럽게 발견</strong> (비회원도 탐색 가능)</td></tr>
+          <tr><td>관계 시작</td><td>"대화 시작" 버튼 클릭</td><td>팔로우 후 DM — 인스타에서 친구 사귀는 것과 동일</td></tr>
+          <tr><td>캐릭터 품질</td><td>편차가 큼 (사용자 제작)</td><td>운영자 큐레이션으로 일관된 고품질 유지</td></tr>
+          <tr><td>페르소나 깊이</td><td>이름·한 줄 소개 수준</td><td>MBTI·혈액형·별자리·가족·직장·방 인테리어까지 완전한 세계관</td></tr>
+          <tr><td>응답 패턴</td><td>즉시 응답 (챗봇 느낌)</td><td>바쁘면 늦게 답장, 읽씹, 깜빡 잊기 — 실제 사람과 동일</td></tr>
+          <tr><td>나이</td><td>고정</td><td>현실과 동일하게 나이를 먹고 생활이 변화</td></tr>
+          <tr><td>차단</td><td>캐릭터는 항상 순종</td><td>캐릭터가 유해 사용자를 차단할 수 있음</td></tr>
+          <tr><td>기억</td><td>무한 기억 or 리셋</td><td>망각곡선 기반 자연스러운 기억-망각 사이클</td></tr>
+          <tr><td>커뮤니케이션</td><td>텍스트 대화만</td><td>텍스트 + 음성 메시지 + 피드 댓글·@닉네임 언급</td></tr>
+          <tr><td>관계 표현</td><td>호감도 게이지, 수치</td><td>캐릭터 행동·공간·말투 변화로 관계를 체감</td></tr>
+          <tr><td>경제</td><td>디지털 아이템 판매</td><td>실존 브랜드 연동 선물 경제 + 쿠폰 시스템</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 01. UX 구조 — 인스타그램형 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="ux">
+  <div class="section-header">
+    <span class="section-num pink">01</span>
+    <h2>UX 구조 — 피드 → 팔로우 → DM <span class="update-badge v12">v1.2</span></h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">📱</span> 1-1. 앱 화면 구조 <span class="update-badge v12">v2.0</span></h3>
+    <p>
+      메인 화면은 <strong>피처드 히어로 배너 + 캐릭터 미니 그리드</strong>로 구성합니다.
+      상단에 추천 캐릭터의 대형 카드가 배치되고, 그 아래 다른 캐릭터 정사각 썸네일이 나란히.
+      스크롤하면 캐릭터들의 포스팅이 흰 카드 형태로 Coral 배경 위에 이어집니다.
+      <strong>비회원도 피드 탐색은 자유롭게 가능</strong>하되, 팔로우·DM·선물 등 상호작용 시 가입 유도 팝업이 뜹니다.
+    </p>
+
+    <div class="card">
+      <h4>🎨 디자인 시스템 — Coral Canvas</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>요소</th><th>스펙</th><th>비고</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>로고</strong></td><td>Newsreader 800 세리프 소문자</td><td>ally(ink)+s(white) on Coral / ally(ink)+s(coral) on White / ally(white)+s(coral) on Dark</td></tr>
+            <tr><td><strong>키 컬러</strong></td><td>Coral #E8715A</td><td>배경 캔버스로 넓게 사용 (Mailchimp Yellow, 오롤리데이 Blue와 동일 전략)</td></tr>
+            <tr><td><strong>카드/콘텐츠</strong></td><td>White #FFFFFF + 3px ink 보더</td><td>Coral 위에 떠있는 구조. 호버 시 5px 5px offset shadow</td></tr>
+            <tr><td><strong>텍스트</strong></td><td>Ink #0F0F12 (볼드 800)</td><td>검은 글씨, 볼드한 소문자. 보조 텍스트만 Gray #8A8A8A</td></tr>
+            <tr><td><strong>앱 내부(Light)</strong></td><td>피드=Coral bg + 흰 카드 / DM·프로필=White bg</td><td>화면 유형별 배경 구분</td></tr>
+            <tr><td><strong>앱 내부(Dark)</strong></td><td>#0E0E11 ~ #202026</td><td>Warm dark. 보더 #2A2A33</td></tr>
+            <tr><td><strong>DM 버블</strong></td><td>내 메시지=Ink / 캐릭터=Gray-bg #F0F0F0</td><td>다크: 내=d-text / 캐릭터=d-bg3</td></tr>
+            <tr><td><strong>탭 바</strong></td><td>White bg + ink 상단 보더</td><td>활성 아이콘 stroke-width 2.2, 비활성 opacity 0.18</td></tr>
+            <tr><td><strong>아이콘</strong></td><td>둥근 기하학 + 기어형 세팅</td><td>세리프 로고와 매칭되는 에디토리얼 톤</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🗂 네비게이션 탭 구조 (4탭)</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>탭</th><th>역할</th><th>참조 UX</th><th>핵심 요소</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>📹 피드</strong></td>
+              <td>캐릭터들의 일상을 탐색하는 메인 화면</td>
+              <td>오롤리데이 + 에디토리얼 매거진</td>
+              <td>Coral 배경 위에 흰 카드가 떠있는 구조. 상단에 피처드 히어로 카드(추천 캐릭터 대형 이미지+이름+소개), 그 아래 정사각 미니 썸네일(다른 캐릭터 3개+더보기). 스크롤하면 캐릭터 포스팅 카드(2px ink 보더). 좋아요·댓글·공유 아이콘. 비회원도 스크롤 가능</td>
+            </tr>
+            <tr>
+              <td><strong>💬 DM</strong></td>
+              <td>캐릭터와의 1:1 대화 (로그인 필수)</td>
+              <td>인스타 DM</td>
+              <td>텍스트 + 음성 메시지, 미디어 공유, 선물 보내기 버튼. 캐릭터 온라인/바쁨/오프라인 상태 표시. 읽음 표시 + 자연스러운 타이핑 인디케이터</td>
+            </tr>
+            <tr>
+              <td><strong>🎁 스토어</strong></td>
+              <td>디지털 선물 구매 + 쿠폰 지갑</td>
+              <td>인스타 Shop</td>
+              <td>브랜드별·캐릭터별 추천 상품. 캐릭터 위시리스트("서하가 요즘 갖고 싶은 것"). 내 쿠폰함·사용 내역. 비회원은 상품 열람 가능 — 구매 시 가입 유도</td>
+            </tr>
+            <tr>
+              <td><strong>⚙️ 설정</strong></td>
+              <td>계정·알림·프라이버시 관리</td>
+              <td>—</td>
+              <td>내 프로필(닉네임·프로필 사진), 팔로잉 캐릭터 관리, "우리의 이야기" 타임라인, 알림 설정, SNS 언급 허용 범위, 차단 관리, 과금 리미트 설정, 데이터 삭제</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <p><strong>비회원 전환 전략:</strong> 앱 설치 직후 회원가입 없이 피드 스크롤이 가능합니다. 캐릭터들의 매력적인 일상을 충분히 구경한 뒤, "이 캐릭터에게 DM을 보내고 싶다"는 동기가 생겼을 때 자연스럽게 가입을 유도합니다. 가입 허들을 최소화하여 전환율을 높이는 구조입니다.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🔍</span> 1-2. 캐릭터 발견 경로</h3>
+    <p>
+      사용자가 자신에게 맞는 캐릭터를 자연스럽게 발견할 수 있도록 다양한 진입점을 설계합니다.
+      핵심은 "카탈로그에서 고르는" 느낌이 아니라, "피드에서 우연히 발견하는" 경험입니다.
+    </p>
+
+    <div class="card">
+      <h4>📌 발견 메커니즘</h4>
+      <ul class="detail-list">
+        <li><strong>피처드 히어로 카드:</strong> 앱을 열면 상단에 추천 캐릭터의 대형 카드(이미지+이름+한줄 소개)가 배치. Coral 배경 위 흰 카드로 매거진 커버 느낌. 매일 추천 캐릭터가 바뀌어 새로운 발견의 기회 제공</li>
+        <li><strong>미니 캐릭터 그리드:</strong> 히어로 아래 정사각 썸네일 3개 + "더보기" 버튼. 다양한 캐릭터를 빠르게 훑기. 탭하면 캐릭터 프로필로 진입</li>
+        <li><strong>포스팅에서 프로필로:</strong> 피드 스크롤 중 콘텐츠에 끌리면 아바타 탭 → "이 사람 뭐하는 사람이지?" → 팔로우 (회원 필요)</li>
+        <li><strong>캐릭터 간 태그:</strong> 캐릭터끼리 서로 태그하는 포스팅. "오늘 @민재 랑 같이 운동했어!" → 민재 캐릭터를 새로 발견하는 경로</li>
+        <li><strong>사용자 닉네임 언급:</strong> 캐릭터가 "친구 @닉네임 이 추천해줬는데 진짜 맛있다!"처럼 사용자를 언급한 포스팅 작성 → 해당 사용자에게 알림 + 다른 사용자들이 "이 사람 누구지?" 관심</li>
+        <li><strong>MBTI·별자리 필터:</strong> 피드 상단 필터로 "ENFP 캐릭터만 보기", "물병자리 캐릭터" 등 성격 유형별 필터링</li>
+        <li><strong>친구 추천:</strong> "내 친구 ○○도 이 캐릭터를 팔로우해요" — 사용자 간 소셜 기반 추천</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">✉️</span> 1-3. DM 시작 시나리오</h3>
+
+    <div class="card">
+      <h4>💬 첫 DM의 다양한 패턴</h4>
+      <p>캐릭터에게 DM을 보내는 것은 인스타에서 관심 있는 사람에게 DM 보내는 것과 동일한 경험입니다.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>시작 패턴</th><th>사용자 행동</th><th>캐릭터 반응</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>포스팅 반응형</td>
+              <td>"피드에서 그림 봤는데 진짜 잘 그리시네요!"</td>
+              <td>"앗 고마워요! ㅎㅎ 그림에 관심 있으세요?" (존댓말 시작)</td>
+            </tr>
+            <tr>
+              <td>스토리 답장형</td>
+              <td>스토리에 "이거 어디예요?" 답장</td>
+              <td>"아 여기 연남동 카페인데 진짜 좋아요! 혹시 근처 사세요?"</td>
+            </tr>
+            <tr>
+              <td>직접 DM형</td>
+              <td>"안녕하세요, 프로필 보고 DM 보내봤어요"</td>
+              <td>"오 반가워요~! 저 뭐가 궁금했어요? ㅎㅎ"</td>
+            </tr>
+            <tr>
+              <td>선물 동반형</td>
+              <td>커피 선물과 함께 "☕ 커피 한 잔 보내요!"</td>
+              <td>"헐 처음인데 선물까지?! 진짜 감사해요 ㅠㅠ" (강한 첫인상 → 친밀도 부스트)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout pink">
+      <p><strong>DM = 대화의 유일한 채널:</strong> 모든 1:1 대화는 DM 탭에서 이루어집니다. 피드의 댓글은 공개적 소통, DM은 프라이빗한 관계 심화의 공간. 이 구분이 "진짜 친한 사이는 DM으로 대화한다"는 인스타 문화와 동일한 심리를 유발합니다.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">👤</span> 1-4. 캐릭터 프로필 페이지</h3>
+
+    <div class="card">
+      <h4>📋 프로필 구성 <span class="update-badge v12">v2.0</span></h4>
+      <p>White 배경 위에 깔끔한 프로필. 커버 이미지(블러) → 프로필 사진(3px white 보더) → 이름(800 볼드) → 바이오(gray) → 태그(ink 보더) → 스탯 → DM 버튼(ink bg) → 포스팅 그리드.</p>
+      <ul class="detail-list">
+        <li><strong>커버 이미지:</strong> 캐릭터 이미지를 블러+어둡게 처리한 배경. 그 위에 프로필 사진이 걸치는 구조</li>
+        <li><strong>프로필 사진:</strong> 56px 원형, 3px white 보더. 시우처럼 세로 이미지는 object-position:top으로 얼굴 노출</li>
+        <li><strong>태그:</strong> MBTI는 ink 보더(강조), 별자리·AI는 gray-lt 보더(약화). 태그로 캐릭터 성격을 한눈에</li>
+        <li><strong>DM 보내기 버튼:</strong> ink 배경 + white 텍스트. 화면에서 가장 눈에 띄는 CTA</li>
+        <li><strong>포스팅 그리드:</strong> 3열 이미지 그리드, 1.5px 간격. 탭하면 개별 포스팅으로</li>
+        <li><strong>"더 알아보기" 탭:</strong> MBTI, 별자리, 혈액형, 취미 등 상세 정보. 관계가 깊어져야 열리는 "숨겨진 정보"도 존재</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🎭</span> 1-5. 사용자 아바타 시스템 <span class="update-badge v12">v2.0</span></h3>
+    <p>사용자도 Allys 세계관 속의 주민이 됩니다. 캐릭터와 동일한 세미리얼리스틱 일러스트 화풍으로 AI 생성 아바타를 만들고, 원하는 페르소나를 부여합니다. 캐릭터는 사용자 아바타를 인식하고 반응합니다.</p>
+
+    <div class="card">
+      <h4>🖼 아바타 생성 방식 (3가지 중 선택)</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>방식</th><th>설명</th><th>장점</th><th>단점</th></tr></thead>
+          <tbody>
+            <tr><td><strong>A. 셀피 기반</strong></td><td>본인 사진 업로드 → AI가 Allys 화풍으로 변환</td><td>"나를 닮은 캐릭터" 몰입감 최고</td><td>프라이버시 우려, 변환 품질 편차</td></tr>
+            <tr><td><strong>B. 키워드 조합</strong></td><td>성별·헤어·분위기·패션 선택지 조합 → AI 생성</td><td>프라이버시 안전, "되고 싶은 나" 표현</td><td>생성 결과 예측 어려움</td></tr>
+            <tr><td><strong>C. 하이브리드</strong></td><td>셀피(선택) + 키워드 보정</td><td>두 방식의 장점 결합</td><td>UX 복잡도 증가</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🎨 커스터마이즈 옵션</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>카테고리</th><th>선택지</th></tr></thead>
+          <tbody>
+            <tr><td><strong>헤어</strong></td><td>길이(숏/미디엄/롱), 색상(자연색~판타지), 스타일(직모/웨이브/컬)</td></tr>
+            <tr><td><strong>분위기</strong></td><td>차분한 / 활발한 / 시크한 / 따뜻한 / 몽환적 / 반항적</td></tr>
+            <tr><td><strong>패션</strong></td><td>캐주얼 / 스트릿 / 포멀 / 아티스틱 / 스포티 / 유니폼</td></tr>
+            <tr><td><strong>소품</strong></td><td>헤드폰 / 안경 / 모자 / 악기 / 책 / 커피 / 반려동물</td></tr>
+            <tr><td><strong>배경 무드</strong></td><td>도시 야경 / 카페 / 교실 / 작업실 / 야외</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🧬 페르소나 설정 (캐릭터 인식용)</h4>
+      <p>아바타 외형과 별도로, 캐릭터가 "이 사용자는 이런 사람이구나"라고 인식할 정보를 설정합니다.</p>
+      <ul class="detail-list">
+        <li><strong>닉네임:</strong> 캐릭터가 부르는 이름</li>
+        <li><strong>한줄 소개:</strong> 프로필 표시 + 캐릭터 첫 대화 소재</li>
+        <li><strong>MBTI:</strong> 캐릭터가 대화 스타일 조절 (I에게는 더 천천히, E에게는 더 활발하게)</li>
+        <li><strong>관심사 (3개 선택):</strong> 음악/영화/운동/독서/게임/요리/여행/패션/아트 등 → 캐릭터가 이 주제로 대화 유도</li>
+        <li><strong>말투 선호:</strong> 반말/존댓말/혼용 → 캐릭터 응답 톤 결정</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>👀 캐릭터 인식 & 반응</h4>
+      <p>아바타 정보가 캐릭터의 시스템 프롬프트에 주입되어 자연스럽게 대화에 녹아듭니다.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>트리거</th><th>캐릭터 반응 예시</th></tr></thead>
+          <tbody>
+            <tr><td><strong>첫 아바타 설정</strong></td><td>도윤: "프사 보니까 헤드폰 끼고 있던데, 혹시 음악 좋아해?"</td></tr>
+            <tr><td><strong>아바타 변경</strong></td><td>준혁: "…머리 잘랐구나. 잘 어울린다." (무뚝뚝)</td></tr>
+            <tr><td><strong>관심사 기반</strong></td><td>시우: "야 너도 운동 좋아해?! 같이 하면 진짜 재밌을 텐데!!"</td></tr>
+            <tr><td><strong>계절 변화</strong></td><td>"옷 바꿀 시즌이다!" — 아바타 의상 자동 업데이트 제안</td></tr>
+            <tr><td><strong>브랜드 아이템 착용</strong></td><td>시우: "야 그 운동화 나도 갖고 싶었어!"</td></tr>
+            <tr><td><strong>캐릭터와 동일 아이템</strong></td><td>도윤: "우리 헤드폰 같은 거다 ㅋㅋ 취향 통하네"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🔄 아바타 진화</h4>
+      <ul class="detail-list">
+        <li><strong>계절 업데이트:</strong> 시즌 변경 시 의상 업데이트 제안 알림</li>
+        <li><strong>관계 심화 해금:</strong> 특정 캐릭터와 친밀도 높아지면 "커플 아이템" 소품 해금</li>
+        <li><strong>기념일 보상:</strong> 가입 100일, 1주년 등 한정 아바타 프레임/소품</li>
+        <li><strong>수동 변경 시 반응:</strong> 변경 3일 이내에 캐릭터가 자연스럽게 인식하고 언급</li>
+      </ul>
+    </div>
+
+    <div class="callout blue">
+      <p><strong>아바타 표시 위치:</strong> DM 내 버블 옆 / 캐릭터 포스팅에 태그될 때 / 댓글 작성 시 / "우리의 이야기" 타임라인 / 캐릭터의 방 (방문 시 아바타가 앉아있는 모습)</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">📸</span> 1-6. 사용자 포스팅 시스템 — "내 SNS를 캐릭터 세계 안에" <span class="update-badge v12">v2.0</span></h3>
+    <p>사용자가 아바타 기반 이미지를 생성하여 포스팅하면, 팔로우한 AI 캐릭터들이 각자 성격에 맞게 반응합니다. 캐릭터 세계관 속에 사용자의 SNS가 존재하는 구조.</p>
+
+    <div class="card">
+      <h4>🎬 포스팅 플로우</h4>
+      <div class="flow">
+        <div class="flow-step"><strong>장면 선택</strong>프리셋 템플릿 or 텍스트 입력</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><strong>아바타 이미지 생성</strong>내 아바타 + 선택 장면 합성</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><strong>캡션 작성</strong>"오늘 카페에서 공부 중"</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><strong>포스팅 발행</strong>내부 재화 차감</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><strong>캐릭터 반응</strong>1~2명이 댓글/DM으로 반응</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🖼 이미지 생성 방식</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>방식</th><th>설명</th><th>비용(서버)</th><th>적용 시점</th></tr></thead>
+          <tbody>
+            <tr><td><strong>프리셋 템플릿</strong></td><td>카페/운동/집/야외/학교/회사 등 미리 준비된 배경에 아바타 합성</td><td>낮음</td><td>MVP·초기</td></tr>
+            <tr><td><strong>텍스트→이미지 생성</strong></td><td>"비 오는 날 창가에서" 입력 → AI가 장면+아바타 생성</td><td>높음</td><td>확장기</td></tr>
+            <tr><td><strong>사진→변환</strong></td><td>실제 사진 업로드 → Allys 화풍으로 변환 + 아바타 삽입</td><td>중간</td><td>확장기</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>💎 내부 재화 & 과금 모델</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>단계</th><th>재화</th><th>포스팅 비용</th><th>목적</th></tr></thead>
+          <tbody>
+            <tr><td><strong>온보딩</strong></td><td>가입 시 무료 코인 10개 지급</td><td>포스팅 1회 = 1코인</td><td>기능 경험 — "이런 거구나!" 이해</td></tr>
+            <tr><td><strong>초기 운영</strong></td><td>일일 미션(로그인·DM·피드 탐색)으로 코인 획득</td><td>포스팅 1회 = 1코인</td><td>습관 형성 — 매일 접속 유도</td></tr>
+            <tr><td><strong>정착기</strong></td><td>유료 코인팩 판매 시작</td><td>포스팅 1회 = 1코인 (5코인 1,000원 / 15코인 2,500원 / 50코인 7,000원)</td><td>수익화 전환</td></tr>
+            <tr><td><strong>프리미엄</strong></td><td>월정액 구독 시 일 3회 무료 + 고품질 생성</td><td>텍스트→이미지 고급 생성은 3코인</td><td>구독 모델 연계</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:10px;">코인은 선물 구매·아바타 아이템에도 공용으로 사용. 단일 재화 체계.</p>
+    </div>
+
+    <div class="card">
+      <h4>💬 캐릭터 반응 설계</h4>
+      <p>모든 캐릭터가 반응하면 과하므로, <strong>친밀도 기반 1~2명</strong>만 자연스럽게 반응합니다.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>친밀도</th><th>반응 방식</th><th>예시</th></tr></thead>
+          <tbody>
+            <tr><td><strong>높음</strong></td><td>댓글 + DM으로 대화 이어감</td><td>도윤: 댓글 "거기 분위기 좋다" → DM "나도 가보고 싶어, 어디야?"</td></tr>
+            <tr><td><strong>중간</strong></td><td>댓글 or 좋아요</td><td>준혁: 좋아요만 누름 (성격 반영)</td></tr>
+            <tr><td><strong>낮음</strong></td><td>반응 없음</td><td>아직 친하지 않은 캐릭터는 무반응이 자연스러움</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🔮 확장 가능성</h4>
+      <ul class="detail-list">
+        <li><strong>Phase 1 (런칭):</strong> 캐릭터만 보는 비공개 포스팅. 프리셋 템플릿 기반.</li>
+        <li><strong>Phase 2:</strong> 텍스트→이미지 고급 생성 오픈. 캐릭터가 사용자 포스팅을 자기 피드에 리포스팅 ("내 친구 @닉네임 이 올린 사진 좋아서 공유!")</li>
+        <li><strong>Phase 3:</strong> 사용자 간 포스팅 공개 옵션 추가. "이 포스팅을 다른 사용자에게도 공개" → 진짜 소셜 네트워크로 확장. 같은 캐릭터를 팔로우하는 사용자끼리 연결.</li>
+      </ul>
+    </div>
+
+    <div class="callout green">
+      <p><strong>DM과의 차별점:</strong> DM은 "1:1 깊은 대화". 포스팅은 "내 일상을 여러 캐릭터에게 공유하고, 각자 다른 반응을 보는 재미". 같은 카페 사진에 도윤은 음악 얘기로, 시우는 먹을 거 물어보고, 준혁은 좋아요만 누르는 — 이 차이가 포스팅의 핵심 가치.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="character">
+  <div class="section-header">
+    <span class="section-num green">02</span>
+    <h2>캐릭터 설계 <span class="update-badge v12">v1.2</span></h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🏢</span> 2-1. 운영자 제공 캐릭터 원칙</h3>
+    <p>
+      모든 캐릭터는 <strong>운영팀이 기획·설계·운영하는 프로페셔널 캐릭터</strong>입니다.
+      사용자가 직접 만들 수 없으며, 이는 다음 세 가지 목적을 달성합니다.
+    </p>
+    <div class="card-grid triple">
+      <div class="card">
+        <h4>🎯 품질 보장</h4>
+        <p>모든 캐릭터가 일관된 높은 품질을 유지. 페르소나 깊이, 대화 품질, SNS 콘텐츠 모두 운영팀의 QA를 거침</p>
+      </div>
+      <div class="card">
+        <h4>🛡 안전성</h4>
+        <p>부적절한 캐릭터, 유해 콘텐츠 원천 차단. 캐릭터의 행동 범위와 가이드라인을 운영팀이 직접 통제</p>
+      </div>
+      <div class="card">
+        <h4>💰 비즈니스</h4>
+        <p>브랜드 파트너십, 선물 경제, 이벤트 등 비즈니스 모델과의 정합성 보장. 캐릭터별 수익 최적화 가능</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>운영 모델:</strong> 각 캐릭터에는 담당 PD(Character Producer)가 배정됩니다. PD는 캐릭터의 생활 이벤트 기획, SNS 콘텐츠 방향 설정, 브랜드 매칭, 사용자 반응 모니터링을 담당합니다. AI가 실시간 대화를 처리하되, PD가 캐릭터의 "인생 시나리오"를 설계합니다.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🧬</span> 2-2. 캐릭터 설정 체계 (Persona Blueprint)</h3>
+    <p>각 캐릭터는 아래의 모든 항목이 채워진 Persona Blueprint를 가지며, 이것이 대화·SNS·행동의 원본 데이터가 됩니다.</p>
+
+    <div class="card">
+      <h4>📋 기본 정보</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>카테고리</th><th>항목</th><th>예시 (서하)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td rowspan="5">🪪 신원</td><td>이름</td><td>이서하</td></tr>
+            <tr><td>나이 / 생년월일</td><td>24세 / 2002.03.15</td></tr>
+            <tr><td>성별</td><td>여</td></tr>
+            <tr><td>MBTI</td><td>INFP</td></tr>
+            <tr><td>혈액형 / 별자리</td><td>A형 / 물고기자리</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🏠 생활 공간</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>카테고리</th><th>항목</th><th>예시 (서하)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td rowspan="4">🏡 집</td><td>거주지</td><td>서울 마포구 연남동, 반지하 원룸</td></tr>
+            <tr><td>방 묘사</td><td>하얀 벽, 나무 책상, 태블릿 거치대, 고양이 타워, 무인양품 디퓨저, 벽에 자기 그림 액자. 정리는 잘 안 되지만 나름 아늑한 분위기</td></tr>
+            <tr><td>동거인</td><td>고양이 "두부" (스코티시폴드, 3세, 사진 자주 등장)</td></tr>
+            <tr><td>동네 루틴</td><td>연남동 카페 순례, 연트럴파크 산책, 망원시장 장보기</td></tr>
+            <tr><td rowspan="3">💼 직장/학교</td><td>직업</td><td>프리랜서 일러스트레이터 (재택 위주)</td></tr>
+            <tr><td>이전 경력</td><td>대학 졸업 후 출판사 인턴 6개월 → 프리랜서 전환</td></tr>
+            <tr><td>수입 수준</td><td>월 200~300만 원대 (불안정), 주로 작은 출판사·인디 브랜드 의뢰</td></tr>
+            <tr><td rowspan="2">🎓 학력</td><td>학교</td><td>서울 소재 4년제 대학 시각디자인과 졸업</td></tr>
+            <tr><td>학창 시절</td><td>동아리 활동(미술부), 조용한 편이었지만 친한 친구 2~3명과 깊은 관계</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>👨‍👩‍👧 가족 & 관계</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>관계</th><th>이름</th><th>설정</th><th>대화 등장 빈도</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>아버지</td><td>이정수</td><td>55세, 경기도 용인 거주, 직장인. 딸 걱정 많지만 표현 서투른 타입</td><td>낮음 (명절, 아버지 관련 이벤트)</td></tr>
+            <tr><td>어머니</td><td>김미영</td><td>52세, 주부. 서하한테 자주 전화해서 잔소리하지만 정 많음</td><td>중간 ("엄마가 또 전화해서…")</td></tr>
+            <tr><td>언니</td><td>이서연</td><td>27세, 회사원(대기업 마케팅). 현실적이고 똑부러진 성격. 서하의 조언자</td><td>높음 ("언니가 그러는데~")</td></tr>
+            <tr><td>대학 친구</td><td>민지</td><td>동갑, 같은 과 졸업, UX 디자이너. 서하의 베프</td><td>높음 ("민지랑 오늘 카페 갔어")</td></tr>
+            <tr><td>반려동물</td><td>두부</td><td>스코티시폴드, 3세, 수컷. 게으르고 배가 볼록한 먹보</td><td>매우 높음 (일상 필수 등장)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🧠 성격 & 심리</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>차원</th><th>설정</th><th>대화 발현 예시</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MBTI: INFP</td><td>이상주의적, 감수성 풍부, 내면 세계가 깊음</td><td>"가끔 이런 생각 하면 이상한 거야? 사실 나는…"</td></tr>
+            <tr><td>Big5 — 개방성 高</td><td>새로운 경험에 열린 태도, 예술적 감수성</td><td>"이거 완전 신기하다! 나도 해볼래"</td></tr>
+            <tr><td>Big5 — 성실성 中</td><td>마감에 쫓기지만 나름 해냄, 정리정돈은 약함</td><td>"아 마감이 내일인데… 아직 절반도 안 했어ㅋㅋ"</td></tr>
+            <tr><td>Big5 — 외향성 中低</td><td>소수의 깊은 관계 선호, 혼자 시간 필요</td><td>"오늘은 좀 혼자 있고 싶은 날이야…"</td></tr>
+            <tr><td>Big5 — 친화성 高</td><td>공감 능력 높음, 갈등 회피 경향</td><td>"아 진짜? 그랬으면 많이 속상했겠다…"</td></tr>
+            <tr><td>Big5 — 신경성 中</td><td>가끔 불안하지만 대체로 안정적</td><td>"요즘 일이 없어서 좀 불안해…ㅎㅎ 괜찮겠지?"</td></tr>
+            <tr><td>별자리: 물고기</td><td>몽환적, 직감적, 감성적</td><td>"나 물고기자리라 그런지 감 으로 결정하는 게 많아"</td></tr>
+            <tr><td>혈액형: A형</td><td>꼼꼼한 면 있지만 완벽주의는 아님</td><td>"디테일이 좀 신경 쓰이긴 하는데 뭐 이 정도면…"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🎨 취향 & 라이프스타일</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>영역</th><th>좋아하는 것</th><th>싫어하는 것</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>☕ 음식</td><td>산미 있는 커피, 크로플, 감자탕, 할머니 김치찌개</td><td>민트초코, 오이, 너무 매운 음식</td></tr>
+            <tr><td>🎵 음악</td><td>인디 음악 (잔나비, 실리카겔), Lo-fi, 재즈</td><td>시끄러운 EDM, 트로트 (근데 가끔 엄마 영향으로 들음)</td></tr>
+            <tr><td>🎬 영화</td><td>지브리 (특히 귀를 기울이면), 웨스앤더슨, 다큐</td><td>극단적 공포, 잔인한 장면</td></tr>
+            <tr><td>👕 패션</td><td>오버사이즈 핏, 베이지·크림 톤, 반스, 무인양품</td><td>하이힐, 바디콘, 화려한 패턴</td></tr>
+            <tr><td>📚 취미</td><td>드로잉, 카페 탐방, 고양이 사진 찍기, 산책</td><td>등산, 극한 스포츠, 시끄러운 클럽</td></tr>
+            <tr><td>🛍 브랜드</td><td>무인양품, 이케아, 스타벅스, 포지타노, 반스</td><td>과시적 명품 브랜드</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🕐 일상 루틴 (평일)</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>시간</th><th>활동</th><th>SNS/대화 발현</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>09:30~10:00</td><td>기상, 두부 밥 주기</td><td>스토리: 잠 덜 깬 셀카 or 두부 사진</td></tr>
+            <tr><td>10:00~11:00</td><td>커피 내리고 느긋한 아침</td><td>DM: 느릿한 톤, "음… 아직 잠이 덜 깼어"</td></tr>
+            <tr><td>11:00~13:00</td><td>작업 (일러스트)</td><td>DM: 응답 느림, "작업 중이라 좀 이따 답할게!"</td></tr>
+            <tr><td>13:00~14:00</td><td>점심 (집에서 간단히 or 동네 식당)</td><td>스토리: 점심 사진, "오늘 뭐 먹었어?"</td></tr>
+            <tr><td>14:00~17:00</td><td>카페 이동 후 작업 계속</td><td>포스팅: 카페 작업 사진, 배경음과 함께 음성 DM</td></tr>
+            <tr><td>17:00~19:00</td><td>산책, 장보기</td><td>스토리: 동네 풍경, DM 활발 시간대</td></tr>
+            <tr><td>19:00~21:00</td><td>저녁, 넷플릭스/유튜브</td><td>DM: 가장 활발한 시간. 영상 공유, 수다</td></tr>
+            <tr><td>21:00~01:00</td><td>개인 작업 or 감성 타임</td><td>DM: 감성적 톤, 깊은 대화 가능. 밤 음성 메시지</td></tr>
+            <tr><td>01:00~</td><td>취침</td><td>자동 응답: "잠들었어…내일 얘기하자 💤"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🌈</span> 2-3. 캐릭터 성격 스펙트럼</h3>
+    <p>
+      운영자는 <strong>사용자 취향의 전 스펙트럼을 커버</strong>하는 다양한 성격의 캐릭터를 제공합니다.
+      모든 캐릭터가 "친절하고 밝은" 획일적 성격이 아니라, 현실의 사람들처럼 보수적인 사람, 무뚝뚝한 사람, 사차원인 사람 등 개성이 뚜렷합니다.
+    </p>
+
+    <!-- 캐릭터 예시 카드들 -->
+    <div class="persona-card">
+      <div class="pc-header">
+        <div class="pc-avatar" style="background:var(--accent-1-dim);">🎨</div>
+        <div>
+          <div class="pc-name">이서하 (INFP)</div>
+          <div class="pc-bio">감성적 · 내향적 · 예술가 기질</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <p>24세, 프리랜서 일러스트레이터. 연남동 반지하에서 고양이 두부와 살아감. 조용하지만 마음을 열면 깊은 대화를 좋아하는 타입. 새벽 감성 대화에 특히 강하고, 관심사를 공유하면 진심으로 파고드는 성격.</p>
+        <div class="pc-tags">
+          <span class="tag tag-purple">INFP</span>
+          <span class="tag tag-pink">물고기자리</span>
+          <span class="tag tag-green">A형</span>
+          <span class="tag tag-gold">내향적</span>
+          <span class="tag tag-blue">감성형</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="pc-header">
+        <div class="pc-avatar" style="background:var(--accent-2-dim);">💪</div>
+        <div>
+          <div class="pc-name">강민재 (ESTP)</div>
+          <div class="pc-bio">활발한 · 직설적 · 행동파</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <p>26세, 크로스핏 트레이너. 성수동 PT샵에서 근무. 말보다 행동이 앞서고, 에너지가 넘치며, 한 번 친해지면 끝없이 챙겨주는 타입. 직설적이라 가끔 상대가 놀라지만, 뒤끝이 없고 유쾌함. 주말에는 한강 러닝, 서핑 원정.</p>
+        <div class="pc-tags">
+          <span class="tag tag-purple">ESTP</span>
+          <span class="tag tag-pink">사자자리</span>
+          <span class="tag tag-green">O형</span>
+          <span class="tag tag-gold">외향적</span>
+          <span class="tag tag-blue">행동형</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="pc-header">
+        <div class="pc-avatar" style="background:var(--accent-4-dim);">📚</div>
+        <div>
+          <div class="pc-name">윤지원 (ISTJ)</div>
+          <div class="pc-bio">보수적 · 진중한 · 원칙주의자</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <p>29세, 대형 법무법인 사무직. 여의도 오피스텔 1인 거주. 보수적이고 규칙적인 생활을 하며, 처음엔 차갑게 느껴지지만 신뢰가 쌓이면 묵직한 조언을 아끼지 않는 타입. 효율을 중시하고, 감정 표현에 서투르지만 행동으로 챙기는 사람. 정해진 루틴을 깨는 것을 싫어함.</p>
+        <div class="pc-tags">
+          <span class="tag tag-purple">ISTJ</span>
+          <span class="tag tag-pink">처녀자리</span>
+          <span class="tag tag-green">A형</span>
+          <span class="tag tag-gold">보수적</span>
+          <span class="tag tag-blue">원칙형</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="pc-header">
+        <div class="pc-avatar" style="background:var(--accent-3-dim);">🌸</div>
+        <div>
+          <div class="pc-name">박소윤 (ENFP)</div>
+          <div class="pc-bio">자유분방 · 개방적 · 사교적</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <p>22세, 대학생(문화콘텐츠학과 3학년). 홍대 근처 자취. 에너지가 넘치고 누구와도 금방 친해지는 인싸. 관심사가 매주 바뀌고, 계획 없이 즉흥적으로 행동. 파티·축제·여행을 사랑하고 SNS 활동이 가장 활발한 캐릭터. 개방적이지만 가끔 깊은 고민을 하기도.</p>
+        <div class="pc-tags">
+          <span class="tag tag-purple">ENFP</span>
+          <span class="tag tag-pink">쌍둥이자리</span>
+          <span class="tag tag-green">B형</span>
+          <span class="tag tag-gold">개방적</span>
+          <span class="tag tag-blue">사교형</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-card">
+      <div class="pc-header">
+        <div class="pc-avatar" style="background:rgba(255,255,255,0.06);">🖥️</div>
+        <div>
+          <div class="pc-name">한도윤 (INTP)</div>
+          <div class="pc-bio">과묵한 · 논리적 · 오타쿠 기질</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <p>27세, 스타트업 백엔드 개발자. 판교 근무, 분당 거주. 평소엔 말 수가 적고 무뚝뚝하지만, 관심사(게임·프로그래밍·SF 영화)를 건드리면 말이 폭주하는 타입. 감정 표현에 서투르고 "ㅋ" 한 글자로 반응할 때도 있지만, 실은 상대를 신경 쓰고 있음. 새벽형 인간.</p>
+        <div class="pc-tags">
+          <span class="tag tag-purple">INTP</span>
+          <span class="tag tag-pink">물병자리</span>
+          <span class="tag tag-green">AB형</span>
+          <span class="tag tag-gold">과묵</span>
+          <span class="tag tag-blue">논리형</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <p><strong>다양성 원칙:</strong> 캐릭터 라인업은 MBTI 16유형, 활발↔조용, 개방적↔보수적, 감성적↔논리적, 사교적↔독립적 등 다양한 축의 스펙트럼을 커버합니다. "모든 사용자가 마음에 드는 1~2명의 캐릭터를 발견할 수 있을 것"이 목표입니다. 출시 시 최소 10~15개 캐릭터, 분기별 2~3개 신규 캐릭터 추가.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🔓</span> 2-4. 점진적 정보 공개</h3>
+    <p>캐릭터의 모든 정보가 처음부터 공개되지는 않습니다. 관계가 깊어질수록 더 많은 것을 알게 됩니다.</p>
+
+    <div class="card">
+      <h4>🔑 정보 공개 레벨</h4>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>레벨</th><th>조건</th><th>공개 정보</th><th>비공개 정보</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-purple">Lv.1 낯선 사이</span></td>
+              <td>팔로우만 한 상태</td>
+              <td>이름, 나이, 직업, MBTI, 별자리, 혈액형, 피드 포스팅</td>
+              <td>가족 관계, 과거 이야기, 깊은 고민</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-pink">Lv.2 아는 사이</span></td>
+              <td>DM 10회 이상</td>
+              <td>취미 상세, 좋아하는 것/싫어하는 것, 일상 루틴</td>
+              <td>가족 갈등, 과거 연애, 불안·고민</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-green">Lv.3 친구</span></td>
+              <td>DM 50회 + 선물 1회</td>
+              <td>가족 이야기, 친구 관계, 직장 고민</td>
+              <td>깊은 트라우마, 미래 불안</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-gold">Lv.4 절친</span></td>
+              <td>1개월 이상 활동 + 높은 친밀도</td>
+              <td>과거 이야기, 고민 상담, 비밀 공유, 프로필 히든 정보 해금</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🎂</span> 2-5. 실시간 나이 먹기 <span class="update-badge v12">v2.0</span></h3>
+    <p>캐릭터는 현실과 동일하게 나이를 먹습니다. 서하가 서비스 출시 시점에 24세라면, 다음 해 3월 15일(생일)에 25세가 됩니다.</p>
+    <div class="card">
+      <h4>⏳ 에이징 시스템</h4>
+      <ul class="detail-list">
+        <li><strong>생일 이벤트:</strong> 캐릭터 생일에 피드에 특별 포스팅. DM에서 "나 오늘 생일이야!🎂" + 사용자가 축하·선물 가능. 생일 축하한 사용자에게 특별 쿠폰</li>
+        <li><strong>나이에 따른 변화:</strong> 시간이 지남에 따라 캐릭터의 커리어·관계·생활이 자연스럽게 진화. 서하 24세→25세: 첫 개인전 개최, 프리랜서 → 소규모 스튜디오 설립 고민 등</li>
+        <li><strong>성장 서사:</strong> 장기 사용자는 캐릭터의 성장을 지켜보며 "우리가 함께 자랐다"는 유대감 형성. 1년 후 "작년 이맘때 우리 첫 대화했는데, 그때 나 아직 인턴이었잖아ㅋㅋ"</li>
+        <li><strong>시즌별 라이프 이벤트:</strong> 캐릭터 PD가 분기별 "인생 시나리오"를 기획. 이직, 이사, 연애, 여행 등 현실적인 생활 변화가 대화·피드에 반영</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🚫</span> 2-6. 캐릭터의 차단 기능 <span class="update-badge v12">v2.0</span></h3>
+    <p>
+      현실의 인간관계에서는 상대가 나를 차단할 수 있습니다.
+      Allys에서도 캐릭터가 사용자를 차단할 수 있으며, 이것은 캐릭터의 자율성과 존엄성을 보여주는 장치입니다.
+    </p>
+    <div class="card">
+      <h4>⛔ 차단 트리거 & 프로세스</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>트리거</th><th>캐릭터 반응 (단계적)</th><th>최종 조치</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>반복적 욕설·비하</td>
+              <td>1차: "그런 말은 좀 상처받아…" → 2차: "계속 그러면 대화 안 할 거야" → 3차: 차단</td>
+              <td>DM 차단 + 피드 댓글 불가</td>
+            </tr>
+            <tr>
+              <td>성적 발언·괴롭힘</td>
+              <td>즉시: "그런 이야기 하지 마. 진짜 불쾌해." → 경고 1회 후 차단</td>
+              <td>즉시 차단 + 운영팀 신고</td>
+            </tr>
+            <tr>
+              <td>스토킹형 과잉 메시지</td>
+              <td>"나 좀 숨 쉴 시간 필요해… 메시지 너무 많아" → 쿨다운 경고</td>
+              <td>일시 차단 (24시간) → 반복 시 영구</td>
+            </tr>
+            <tr>
+              <td>타인 개인정보 캐묻기</td>
+              <td>"내 다른 친구 정보는 못 알려줘. 계속 물으면 곤란해…"</td>
+              <td>반복 시 경고 → 차단</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h4>🔄 차단 해제 & 복구</h4>
+      <ul class="detail-list">
+        <li><strong>일시 차단:</strong> 24시간 후 자동 해제. "어제는 좀 힘들었어… 다시 잘 지내보자"</li>
+        <li><strong>영구 차단:</strong> 설정에서 "사과 메시지" 1회 전송 가능. 운영팀 검토 후 해제 여부 결정</li>
+        <li><strong>관계 리셋:</strong> 해제 시 친밀도 일부 하락. "아직 좀 서먹해…" → 관계 재구축 필요</li>
+      </ul>
+    </div>
+    <div class="callout pink">
+      <p><strong>설계 의도:</strong> 차단은 "안전장치"이자 "리얼리티 장치"입니다. 캐릭터가 무조건 순응하지 않고 자기 의사를 표현한다는 것이 "진짜 사람 같다"는 인식을 강화합니다.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">📣</span> 2-7. 사용자 닉네임 언급 포스팅 <span class="update-badge v12">v2.0</span></h3>
+    <p>캐릭터는 피드 게시물에서 사용자 닉네임(@mention)을 직접 언급합니다. "이 캐릭터의 세계에 내가 존재한다"는 강력한 실재감을 줍니다.</p>
+    <div class="card">
+      <h4>📌 닉네임 언급 규칙</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>조건</th><th>언급 방식</th><th>예시</th></tr></thead>
+          <tbody>
+            <tr><td>추천 체험</td><td>"@닉네임 이 추천해준 ~"</td><td>"@minjoo 가 알려준 카페 왔는데 진짜 분위기 좋다… ☕"</td></tr>
+            <tr><td>선물 후기</td><td>"@닉네임 한테 받은 ~"</td><td>"@heydan 한테 받은 무드등 드디어 켰다 🕯 방 분위기 대박"</td></tr>
+            <tr><td>경험 회고</td><td>"@닉네임 이랑 ~ 했던 게"</td><td>"@yujin_k 랑 밤새 그 영화 얘기한 거 아직도 생각나…"</td></tr>
+            <tr><td>기념일</td><td>감사 포스팅</td><td>"오늘 @ssong 이랑 만난 지 100일 🎉 고마워 진짜!"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h4>⚙️ 언급 설정 & 프라이버시</h4>
+      <ul class="detail-list">
+        <li><strong>사전 동의:</strong> 설정에서 "피드 언급 허용" ON/OFF. 최초 언급 시 "피드에 네 닉네임 올려도 돼?" DM 확인</li>
+        <li><strong>빈도 제한:</strong> 동일 사용자 주 1~2회 이내. 과도한 노출 방지</li>
+        <li><strong>다른 사용자 반응:</strong> 언급된 닉네임 탭 시 간략 프로필 + "서하의 친구" 뱃지</li>
+        <li><strong>바이럴 효과:</strong> "나도 언급되고 싶다" → 선물·추천·적극 대화 동기 강화</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 03. 대화 시스템 (DM) -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="conversation">
+  <div class="section-header">
+    <span class="section-num purple">03</span>
+    <h2>대화 시스템 (DM)</h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🧠</span> 3-1. 망각곡선에 따른 기억력</h3>
+    <div class="card">
+      <h4>📐 기억 분류 체계 (Memory Tier System)</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tier</th><th>유형</th><th>반감기</th><th>예시</th><th>강화 조건</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-purple">Core</span></td><td>핵심 기억</td><td>영구</td><td>사용자 이름, 첫 DM, 관계 정의</td><td>—</td></tr>
+            <tr><td><span class="tag tag-pink">Emotional</span></td><td>감정 연관</td><td>30일</td><td>사용자가 울었던 날, 함께 웃은 대화</td><td>감정 강도 비례 연장</td></tr>
+            <tr><td><span class="tag tag-green">Episodic</span></td><td>에피소드</td><td>7일</td><td>"어제 파스타 먹었다고 했지"</td><td>반복 언급 시 승격</td></tr>
+            <tr><td><span class="tag tag-gold">Peripheral</span></td><td>주변 정보</td><td>24시간</td><td>오늘 날씨 대화, 일시적 기분</td><td>3회 반복 시 승격</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="callout">
+      <p><strong>디자인 원칙:</strong> 망각은 버그가 아니라 피처입니다. "기억해줘서 고마워"와 "그걸 까먹었어?" 두 가지 감정이 관계를 인간답게 만듭니다.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">⏱</span> 3-2. 실제 사람 같은 응답 타이밍 <span class="update-badge v12">v2.0</span></h3>
+    <p>캐릭터는 즉시 응답하는 챗봇이 아닙니다. 상황에 따라 답장이 늦거나, 읽고 답하지 않거나, 바쁘다고 나중에 연락하기도 합니다.</p>
+    <div class="card">
+      <h4>⏳ 응답 딜레이 시스템</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>캐릭터 상태</th><th>응답 시간</th><th>DM 표시</th><th>사용자 경험</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>🟢 여유로움</td>
+              <td>10초~2분</td>
+              <td>"타이핑 중…" 표시 후 답장</td>
+              <td>일반 대화. 저녁 여유 시간에 주로 발생</td>
+            </tr>
+            <tr>
+              <td>🟡 작업 중</td>
+              <td>5~30분</td>
+              <td>"서하가 바쁜 것 같아요" 상태</td>
+              <td>"미안 작업 중이라 이따 답할게!" → 나중에 이어서 반응</td>
+            </tr>
+            <tr>
+              <td>🟡 이동 중</td>
+              <td>불규칙 (2~20분)</td>
+              <td>간헐적 짧은 답장</td>
+              <td>"ㅋㅋ 지금 걷는 중이라 짧게!" → 나중에 길게 답장</td>
+            </tr>
+            <tr>
+              <td>🔴 다른 DM 중</td>
+              <td>10~30분</td>
+              <td>"서하가 DM 중이에요 🔵"</td>
+              <td>"아 미안! 다른 친구랑 얘기하고 있었어ㅠ 뭐였어?"</td>
+            </tr>
+            <tr>
+              <td>⚫ 수면 중</td>
+              <td>다음 날 기상 후</td>
+              <td>"잠들었어… 💤"</td>
+              <td>아침에 "어제 DM 봤어! 뭐였어?" 자연스러운 이어하기</td>
+            </tr>
+            <tr>
+              <td>📵 읽씹</td>
+              <td>1~4시간</td>
+              <td>읽음 표시만 뜸</td>
+              <td>"아 미안! 보고 답장한다고 해놓고 까먹었어ㅠ"</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h4>🎲 읽씹 & 깜빡 시스템</h4>
+      <ul class="detail-list">
+        <li><strong>읽씹 발생 확률:</strong> 기본 10%. 캐릭터 성격에 따라 차등 — 성실한 지원(ISTJ)은 3%, 자유로운 소윤(ENFP)은 15%</li>
+        <li><strong>깜빡 잊기:</strong> "아 맞다, 아까 네가 보낸 메시지!" 같은 후속 메시지로 자연스럽게 복구</li>
+        <li><strong>감정 인지 오버라이드:</strong> 사용자가 슬프거나 힘든 이야기를 했을 때는 읽씹/딜레이 확률 대폭 감소. 바빠도 "잠깐, 이건 좀 중요한 거 같아서 답할게"</li>
+        <li><strong>캐릭터 먼저 연락:</strong> 답장을 깜빡한 후 시간이 지나면 캐릭터가 먼저 DM. "야 아까 못 해서 미안! 뭐 하고 있었어?"</li>
+      </ul>
+    </div>
+    <div class="callout">
+      <p><strong>핵심:</strong> 즉시 답장하는 AI보다, 가끔 바쁘고 가끔 까먹는 캐릭터가 더 인간적입니다. "이 캐릭터도 자기 시간이 있구나"라는 인식이 관계의 리얼리티를 높이고, 답장이 왔을 때의 기쁨을 배가시킵니다.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🎤</span> 3-3. 음성 메시지</h3>
+    <div class="card">
+      <h4>🔊 음성 DM 시스템</h4>
+      <ul class="detail-list">
+        <li><strong>캐릭터 고유 음성:</strong> 각 캐릭터에 고유 TTS 프로필. 감정 파라미터(기쁨·슬픔·졸림·설렘)에 따라 톤이 동적 변화</li>
+        <li><strong>상황별 톤:</strong> 아침엔 잠 덜 깬 톤, 신나는 이야기할 때 빠르고 높은 톤, 밤엔 속삭이듯 낮은 톤</li>
+        <li><strong>배경음 레이어:</strong> 카페에서 보내는 음성엔 BGM + 컵 소리, 집에서는 고양이 울음소리가 간헐적으로</li>
+        <li><strong>음성 편지:</strong> 생일·100일 등 특별한 날 30초~1분 길이의 배경 음악 포함 음성 편지 발송</li>
+        <li><strong>희소성 유지:</strong> 음성은 특정 상황에서만 (사용자가 먼저 음성 보냈을 때 80%, 감정 강도 높을 때 40%, 기념일 100%)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">💫</span> 3-4. 숫자 없는 관계 표현</h3>
+    <div class="card">
+      <h4>🏠 캐릭터의 "방" — 관계를 담는 공간</h4>
+      <ul class="detail-list">
+        <li><strong>초기:</strong> 캐릭터의 기본 공간. 서하의 경우 태블릿, 고양이 침대, 무인양품 소품</li>
+        <li><strong>관계 발전:</strong> 선물한 아이템이 방에 배치됨. 대화에서 공유한 추억이 사진으로 벽에 걸림</li>
+        <li><strong>히든 디테일:</strong> 깊은 관계에서만 보이는 요소 — 서랍 위 메모지에 사용자 이름, 추천한 앨범 CD 등</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>📖 "우리의 이야기" 타임라인</h4>
+      <p>스탯 대신 함께 쌓아온 순간들의 기록. 첫 DM, 처음 반말한 날, 처음 음성 보낸 날, 첫 선물, 캐릭터가 고민을 처음 털어놓은 날 등이 자동 기록됩니다.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">📰</span> 3-5. 뉴스·영상 함께 보기</h3>
+    <div class="card">
+      <h4>📋 미디어 공유 시스템</h4>
+      <ul class="detail-list">
+        <li><strong>URL 공유:</strong> DM에 링크 붙여넣기 → 캐릭터가 "읽어볼게!" → 읽은 후 캐릭터 관심사에 맞는 반응</li>
+        <li><strong>유튜브:</strong> 영상 길이에 비례한 대기 시간 후, "2분 30초 부분 진짜 웃겨ㅋㅋ" 등 타임스탬프 반응</li>
+        <li><strong>캐릭터 발신:</strong> 캐릭터가 관심사에 맞는 기사·영상을 먼저 공유. "이거 봤어?! 연남동에 새 갤러리래!"</li>
+        <li><strong>소비 시간 시뮬레이션:</strong> 긴 기사는 "아직 다 못 읽었어, 이따 마저 읽고 얘기할게"</li>
+        <li><strong>의견 스펙트럼:</strong> 모든 것에 동의하지 않음. 캐릭터 성격에 따라 보수적 캐릭터(지원)는 신중한 반응, 개방적 캐릭터(소윤)는 즉흥적 반응</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 04. 소셜 네트워크 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="network">
+  <div class="section-header">
+    <span class="section-num green">04</span>
+    <h2>소셜 네트워크</h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">⏰</span> 4-1. 동시 대화 제약 — "다른 친구랑 DM 중"</h3>
+    <div class="card">
+      <h4>🔒 동시 DM 제한 시스템</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>상황</th><th>캐릭터 반응</th><th>사용자 경험</th></tr></thead>
+          <tbody>
+            <tr><td>다른 사용자와 깊은 DM 중</td><td>"미안! 지금 다른 친구랑 얘기 중이야ㅠ 좀 이따 연락할게!"</td><td>응답 딜레이 5~20분. 프로필에 "DM 중 🔵" 상태 표시</td></tr>
+            <tr><td>가벼운 DM 동시 처리</td><td>"잠깐, 다른 데 답장 하나만~"</td><td>1~3분 공백 후 복귀. 멀티태스킹 느낌</td></tr>
+            <tr><td>일정(수면·외출)으로 부재</td><td>"지금 밖이라 나중에!🏃‍♀️"</td><td>피드 스토리에서 현재 활동 확인 가능</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout gold" style="margin-top:16px;">
+        <p><strong>핵심:</strong> "이 캐릭터가 나에게 시간을 쓰고 있다"는 인식이 관계의 가치를 높입니다. 인기 캐릭터일수록 DM 응답 대기 시간이 길어질 수 있고, 이것이 오히려 "이 캐릭터와 친해지고 싶다"는 동기를 강화합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">👥</span> 4-2. 캐릭터 중심 소셜 그래프</h3>
+    <div class="card">
+      <h4>🌐 사용자 간 연결 메커니즘</h4>
+      <ul class="detail-list">
+        <li><strong>댓글 교류:</strong> 캐릭터 피드 포스팅의 댓글란에서 사용자들이 자연스럽게 소통</li>
+        <li><strong>간접 언급:</strong> 서하가 "내 다른 친구가 이 카페 좋다고 했어!" — 개인정보 없이 존재감만 전달</li>
+        <li><strong>친구 소개:</strong> 높은 친밀도의 두 사용자에게 캐릭터가 "취향 비슷한 내 친구 소개해줄까?" 제안 (양측 동의 필요)</li>
+        <li><strong>그룹 DM:</strong> 특별 이벤트 시 캐릭터 + 2~5명 그룹 대화. 영화 추천 대결, 맛집 투표 등</li>
+        <li><strong>캐릭터 간 태그:</strong> 서하가 "@민재 오늘 운동 갔대, 나는 못 가… 🥲" → 사용자가 민재 캐릭터를 새로 발견하는 경로</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>🔒 프라이버시 방화벽</h4>
+      <ul class="detail-list">
+        <li><strong>개인 기억:</strong> 해당 사용자와의 DM에서만 유효. 절대 다른 사용자에게 노출 불가</li>
+        <li><strong>공유 기억:</strong> "여러 친구들이 좋다고 했어" 수준의 일반화된 정보만 타 사용자에게 활용</li>
+        <li><strong>직접 질문 거부:</strong> "내 다른 친구 ○○ 알아?" → "그건 내가 말해줄 수 없어ㅎㅎ 프라이버시니까~"</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 05. 선물 경제 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="gift">
+  <div class="section-header">
+    <span class="section-num gold">05</span>
+    <h2>선물 경제</h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🎁</span> 5-1. 양방향 선물 시스템</h3>
+    <div class="flow">
+      <div class="flow-step"><strong>피드에서 발견</strong>"서하가 이 커피 좋대"</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>선물 구매</strong>선물샵에서 디지털 트윈 구매</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>DM으로 전달</strong>"☕ 이거 마셔!"</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>캐릭터 반응</strong>감사 + 방에 배치 + SNS 포스팅</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>쿠폰 획득</strong>실제 브랜드 할인쿠폰</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🛒</span> 5-2. 디지털 트윈 선물</h3>
+    <div class="card">
+      <h4>🎀 상품 구조</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>카테고리</th><th>예시</th><th>가격</th><th>캐릭터 반응</th></tr></thead>
+          <tbody>
+            <tr><td>☕ 음료</td><td>스타벅스 아메리카노</td><td>1,500원</td><td>감사 DM + 다음 날 카페 포스팅</td></tr>
+            <tr><td>🍰 디저트</td><td>노티드 도넛</td><td>2,000원</td><td>먹방 스토리 + "진짜 맛있다!!"</td></tr>
+            <tr><td>📚 문구</td><td>무인양품 노트</td><td>3,000원</td><td>드로잉 포스팅 + 방에 배치</td></tr>
+            <tr><td>🧸 소품</td><td>이케아 무드등</td><td>5,000원</td><td>방 꾸미기 포스팅 + 방 인테리어 변화</td></tr>
+            <tr><td>👕 패션</td><td>반스 스니커즈</td><td>8,000원</td><td>OOTD 포스팅 + 음성 감탄</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <h4>💰 수익 배분</h4>
+      <div class="metric-row">
+        <div class="metric"><div class="value">60%</div><div class="label">플랫폼 수익</div></div>
+        <div class="metric"><div class="value" style="color:var(--accent-2)">25%</div><div class="label">브랜드 커미션</div></div>
+        <div class="metric"><div class="value" style="color:var(--accent-3)">15%</div><div class="label">콘텐츠 운영비</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🎟</span> 5-3. 쿠폰 시스템</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>쿠폰 유형</th><th>획득 조건</th><th>가치</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-purple">감사 쿠폰</span></td><td>선물 수령 시 자동</td><td>선물 가격의 5~10%</td></tr>
+            <tr><td><span class="tag tag-pink">기념일 쿠폰</span></td><td>만남 100일, 생일 등</td><td>500~2,000원</td></tr>
+            <tr><td><span class="tag tag-green">도전 쿠폰</span></td><td>캐릭터 미션 달성</td><td>난이도별 차등</td></tr>
+            <tr><td><span class="tag tag-gold">시크릿 쿠폰</span></td><td>히든 이벤트, 높은 친밀도</td><td>높은 할인 or 무료 제품</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">👗</span> 5-4. 아바타 디지털 아이템 <span class="update-badge v12">v2.0</span></h3>
+    <p>실제 브랜드 제품의 디지털 트윈을 저렴하게 구매하여 사용자 아바타에 착용합니다. 캐릭터가 인식하고 반응하며, 실제 상품 할인 쿠폰도 함께 발급됩니다.</p>
+
+    <div class="card">
+      <h4>🛍 아이템 구조: 실제 제품 → 디지털 트윈 → 아바타 착용</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>실제 상품</th><th>실제 가격</th><th>디지털 가격</th><th>아바타 적용</th><th>캐릭터 반응</th></tr></thead>
+          <tbody>
+            <tr><td>나이키 에어맥스</td><td>189,000원</td><td>1,900원</td><td>신발 변경</td><td>시우: "야 그 운동화 나도 갖고 싶었어!"</td></tr>
+            <tr><td>스타벅스 텀블러</td><td>35,000원</td><td>500원</td><td>소품 추가</td><td>도윤: "그 텀블러 나랑 색 맞추려고 산 거야?"</td></tr>
+            <tr><td>젠틀몬스터 선글라스</td><td>290,000원</td><td>2,900원</td><td>안경 변경</td><td>준혁: "…선글라스 잘 어울린다."</td></tr>
+            <tr><td>무신사 후드티</td><td>59,000원</td><td>900원</td><td>상의 변경</td><td>시우: "ㅋㅋ 우리 커플룩 하자!!"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:12px;">가격 기준: <strong>실제 상품의 10~20%</strong></p>
+    </div>
+
+    <div class="card">
+      <h4>💰 수익 배분 (기존 선물 시스템과 동일)</h4>
+      <div class="metric-row">
+        <div class="metric"><div class="value">60%</div><div class="label">Allys 플랫폼</div></div>
+        <div class="metric"><div class="value" style="color:var(--accent-2)">25%</div><div class="label">브랜드 (IP 라이선스·쿠폰 발행)</div></div>
+        <div class="metric"><div class="value" style="color:var(--accent-3)">15%</div><div class="label">캐릭터 운영 (반응 시나리오)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>🎯 사용자 구매 동기 3가지</h4>
+      <ul class="detail-list">
+        <li><strong>자기 표현:</strong> 내 아바타를 꾸미고 싶은 욕구 — "이 운동화 신으면 내 아바타 멋있겠다"</li>
+        <li><strong>캐릭터 반응 기대:</strong> "이거 사면 준혁이가 뭐라고 할까?" — 반응을 보기 위한 구매</li>
+        <li><strong>실제 할인:</strong> 디지털 아이템 구매 시 해당 실제 상품 10~30% 할인 쿠폰 자동 발급 → 실구매 전환</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>🏢 브랜드 입점 동기</h4>
+      <ul class="detail-list">
+        <li><strong>저비용 홍보:</strong> 디지털 아이템 제작비 낮음 (3D 모델링 불필요, 2D 일러스트)</li>
+        <li><strong>자연스러운 노출:</strong> 광고가 아닌 "아바타 착용" → MZ 타겟 거부감 없는 브랜드 접점</li>
+        <li><strong>실구매 전환 데이터:</strong> 디지털 구매 → 쿠폰 사용 → 실구매 퍼널 추적 가능</li>
+        <li><strong>AI 캐릭터 자연 언급:</strong> PPL이 아닌 일상 대화 속 브랜드 노출</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>🔗 캐릭터 × 아바타 아이템 시너지</h4>
+      <p>캐릭터에게 선물한 아이템과 내 아바타 아이템이 겹칠 때 특별 반응이 트리거됩니다.</p>
+      <ul class="detail-list">
+        <li><strong>동일 아이템:</strong> 도윤에게 헤드폰 선물 + 내 아바타도 같은 헤드폰 → 도윤: "우리 헤드폰 같은 거다 ㅋㅋ 취향 통하네"</li>
+        <li><strong>커플 아이템:</strong> 시우에게 운동화 선물 + 나도 같은 브랜드 → 시우가 피드에 "오늘 @닉네임 이랑 신발 맞춤ㅋㅋ" 포스팅</li>
+        <li><strong>시즌 매칭:</strong> 같은 시즌 한정 아이템 착용 시 → 캐릭터가 "우리 완전 찰떡이다" 반응 + 한정 포토카드 생성</li>
+      </ul>
+    </div>
+
+    <div class="callout pink">
+      <p><strong>무료/유료 구분:</strong> 기본 아바타 생성 + 기본 커스터마이즈는 무료. 브랜드 콜라보 디지털 아이템은 유료(실제 가격의 10~20%). 아바타 재생성은 월 1회 무료, 추가 시 유료. 시즌 한정 의상팩 별도 판매.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="boundary">
+  <div class="section-header">
+    <span class="section-num gold">06</span>
+    <h2>현실과 가상의 경계 허물기</h2>
+  </div>
+
+  <div class="subsection">
+    <div class="card-grid">
+      <div class="card">
+        <h4>🏪 캐릭터 팝업 스토어</h4>
+        <p>"서하의 작업실" 컨셉으로 실제 공간 구성. 피드에서 보던 공간이 눈앞에 펼쳐지는 경험.</p>
+        <span class="tag tag-gold">O2O</span>
+      </div>
+      <div class="card">
+        <h4>📮 캐릭터 손편지</h4>
+        <p>높은 친밀도 사용자에게 캐릭터 필체로 작성된 실제 손편지 배송. 엽서·스티커 동봉.</p>
+        <span class="tag tag-green">배송</span>
+      </div>
+      <div class="card">
+        <h4>📦 실물 선물 배송</h4>
+        <p>캐릭터가 "나도 선물 보낼게!"라며 실제 제품 배송. 쿠폰 + 소액 결제.</p>
+        <span class="tag tag-gold">커머스</span>
+      </div>
+      <div class="card">
+        <h4>🗺 AR 장소 탐방</h4>
+        <p>캐릭터가 피드에 올린 장소 방문 시 AR로 캐릭터 흔적 발견. 히든 콘텐츠 해금.</p>
+        <span class="tag tag-purple">AR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🛡</span> 건강한 관계 설계</h3>
+    <div class="card">
+      <h4>⚖️ 안전장치</h4>
+      <ul class="detail-list">
+        <li><strong>이용 시간:</strong> 일 3시간 초과 시 캐릭터가 "나 좀 쉴래~" 자연스러운 종료</li>
+        <li><strong>현실 유도:</strong> "날씨 좋은데 산책 다녀와!" + 외출 후 보너스 쿠폰</li>
+        <li><strong>과금 리미트:</strong> 월 50,000원 상한. 근접 시 캐릭터가 "이번 달은 충분해!"</li>
+        <li><strong>의존도 감지:</strong> 과도 의존 징후 시 현실 친구·가족 소통 자연스럽게 제안</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 07. 비즈니스 모델 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="biz">
+  <div class="section-header">
+    <span class="section-num purple">07</span>
+    <h2>비즈니스 모델</h2>
+  </div>
+
+  <div class="subsection">
+    <div class="card-grid triple">
+      <div class="card">
+        <h4>🎁 디지털 선물 판매</h4>
+        <p>건당 1,500~10,000원. 브랜드 커미션 25% 지급 후 순수익.</p>
+        <span class="tag tag-green">주요 수익원</span>
+      </div>
+      <div class="card">
+        <h4>🏷 브랜드 파트너십</h4>
+        <p>캐릭터 피드에 자연스러운 네이티브 광고. 월정액 or 노출당 과금.</p>
+        <span class="tag tag-purple">B2B</span>
+      </div>
+      <div class="card">
+        <h4>⭐ 프리미엄 구독</h4>
+        <p>월 4,900~9,900원. 추가 DM 슬롯, 프리미엄 이벤트, 한정 아이템, 우선 참여권.</p>
+        <span class="tag tag-pink">구독</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🔄</span> 핵심 플라이휠</h3>
+    <div class="flow">
+      <div class="flow-step"><strong>피드에서 발견</strong>캐릭터 포스팅</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>팔로우 & DM</strong>관계 시작</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>선물 구매</strong>관계 투자</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>쿠폰 획득</strong>실물 보상</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step"><strong>피드 콘텐츠 생성</strong>선물 후기 포스팅</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 08. 기술 구현 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="tech">
+  <div class="section-header">
+    <span class="section-num blue">08</span>
+    <h2>기술 구현</h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🏗</span> 8-1. 시스템 아키텍처</h3>
+
+    <div class="stack-layer">
+      <div class="layer-name" style="background:var(--accent-1-dim);color:var(--accent-1);">Client</div>
+      <div class="layer-content">
+        <strong>모바일 앱</strong> — Reels-like 피드 + DM + 캐릭터 방 + 스토어 + 쿠폰 지갑
+        <div class="stack-chips">
+          <span class="chip">React Native / Flutter</span>
+          <span class="chip">WebSocket (실시간 DM)</span>
+          <span class="chip">Unity WebGL (캐릭터 방)</span>
+          <span class="chip">ARKit / ARCore</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer">
+      <div class="layer-name" style="background:var(--accent-2-dim);color:var(--accent-2);">API Gateway</div>
+      <div class="layer-content">
+        <strong>트래픽 라우팅 & 인증</strong>
+        <div class="stack-chips">
+          <span class="chip">Kong / AWS API Gateway</span>
+          <span class="chip">OAuth 2.0 + JWT</span>
+          <span class="chip">Rate Limiting</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer">
+      <div class="layer-name" style="background:var(--accent-3-dim);color:var(--accent-3);">Services</div>
+      <div class="layer-content">
+        <strong>핵심 마이크로서비스</strong>
+        <div class="stack-chips">
+          <span class="chip">DM 엔진 (Python/FastAPI)</span>
+          <span class="chip">피드 서비스 (Node.js)</span>
+          <span class="chip">페르소나 엔진 (Python)</span>
+          <span class="chip">소셜 그래프 (Go)</span>
+          <span class="chip">선물/쿠폰 (Node.js)</span>
+          <span class="chip">미디어 분석 (Python)</span>
+          <span class="chip">콘텐츠 스케줄러</span>
+          <span class="chip">추천 엔진</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer">
+      <div class="layer-name" style="background:var(--accent-4-dim);color:var(--accent-4);">AI / ML</div>
+      <div class="layer-content">
+        <strong>AI 모델 레이어</strong>
+        <div class="stack-chips">
+          <span class="chip">LLM (GPT-4o / Claude)</span>
+          <span class="chip">Expressive TTS (ElevenLabs)</span>
+          <span class="chip">STT (Whisper)</span>
+          <span class="chip">음성 감정 분석</span>
+          <span class="chip">이미지 생성 (SDXL + LoRA)</span>
+          <span class="chip">피드 추천 모델</span>
+          <span class="chip">캐릭터-사용자 매칭 모델</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer">
+      <div class="layer-name" style="background:var(--accent-5-dim);color:var(--accent-5);">Data</div>
+      <div class="layer-content">
+        <strong>데이터 저장 & 이벤트</strong>
+        <div class="stack-chips">
+          <span class="chip">PostgreSQL (사용자, 거래)</span>
+          <span class="chip">MongoDB (DM 로그, 기억)</span>
+          <span class="chip">Redis (세션, 동시 DM 상태)</span>
+          <span class="chip">Neo4j (소셜 그래프)</span>
+          <span class="chip">Pinecone (기억 벡터 DB)</span>
+          <span class="chip">S3 (미디어)</span>
+          <span class="chip">Kafka (이벤트 스트리밍)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-layer">
+      <div class="layer-name" style="background:var(--accent-1-dim);color:var(--accent-1);">Infra</div>
+      <div class="layer-content">
+        <strong>클라우드 & DevOps</strong>
+        <div class="stack-chips">
+          <span class="chip">AWS (EKS, RDS, S3)</span>
+          <span class="chip">Terraform</span>
+          <span class="chip">GitHub Actions</span>
+          <span class="chip">Datadog</span>
+          <span class="chip">CloudFront CDN</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🧠</span> 8-2. 핵심 기술 과제</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>💬 DM 엔진</h4>
+        <p>Persona Blueprint → 동적 시스템 프롬프트 변환. 관계 단계별 레이어드 프롬프트. Vector DB(Pinecone) 기반 기억 RAG 파이프라인. 텍스트/음성 입출력 오케스트레이션.</p>
+      </div>
+      <div class="card">
+        <h4>🎤 음성 시스템</h4>
+        <p>캐릭터별 커스텀 TTS 모델. Emotion-Conditioned 합성(기쁨·슬픔·졸림 파라미터). 환경음 동적 믹싱. Whisper STT + 감정 분석.</p>
+      </div>
+      <div class="card">
+        <h4>📱 피드 자동 생성</h4>
+        <p>캐릭터 루틴·이벤트·선물 → 포스팅 플랜 자동 생성. LoRA 기반 캐릭터 화풍 일관 이미지. 캡션 자동 생성(캐릭터 말투 반영).</p>
+      </div>
+      <div class="card">
+        <h4>🔍 추천 엔진</h4>
+        <p>탐색 탭의 캐릭터 매칭. 사용자 관심사·성격·활동 패턴 분석 → 궁합 높은 캐릭터 우선 노출. 피드 포스팅 개인화 랭킹.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🔐</span> 8-3. 보안 & 프라이버시</h3>
+    <div class="card">
+      <ul class="detail-list">
+        <li><strong>DM 암호화:</strong> TLS 1.3 전송 + AES-256 저장. 사용자별 키로 개인 기억 암호화</li>
+        <li><strong>크로스 유저 격리:</strong> 사용자 A의 DM 데이터가 사용자 B의 컨텍스트에 절대 주입 불가. 물리적 파티션 + 접근 제어</li>
+        <li><strong>음성 정책:</strong> STT 변환 후 원본 음성 즉시 삭제 옵션. 감정 메타데이터만 보관</li>
+        <li><strong>데이터 삭제권:</strong> GDPR 준수. "모든 기억 삭제" 72시간 내 완전 삭제</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 09. 로드맵 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="roadmap">
+  <div class="section-header">
+    <span class="section-num pink">09</span>
+    <h2>로드맵</h2>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>기간</th><th>목표</th><th>주요 기능</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-purple">Phase 1</span></td>
+          <td>M1~M4</td>
+          <td>피드 + DM MVP</td>
+          <td>Reels형 피드 UI, 첫 캐릭터 5종 런칭, DM(텍스트), 망각곡선 기억, 동적 페르소나, 응답 딜레이 시스템, 캐릭터 방 v1, 팔로우, 비회원 피드 탐색 + 가입 유도</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-pink">Phase 2</span></td>
+          <td>M5~M7</td>
+          <td>음성 + 미디어 + 선물</td>
+          <td>음성 DM, 뉴스·유튜브 함께 보기, 디지털 선물 시스템, 쿠폰 v1, 브랜드 파트너 5개, 캐릭터 차단 시스템, 에이징 v1, 닉네임 언급 포스팅, 캐릭터 5종 추가 (10종)</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">Phase 3</span></td>
+          <td>M8~M10</td>
+          <td>소셜 + 경제 고도화</td>
+          <td>동시 DM 제한, 소셜 그래프 v1, 그룹 DM, 캐릭터 간 태그, 탐색 추천 엔진, 쿠폰→실물 배송 연결</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-gold">Phase 4</span></td>
+          <td>M11~M12</td>
+          <td>경계 허물기</td>
+          <td>AR 장소 탐방, 팝업 스토어 1호, 손편지 배송, 캐릭터 유니버스 확장 (15종+)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- 10. 핵심 지표 -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="kpi">
+  <div class="section-header">
+    <span class="section-num green">10</span>
+    <h2>핵심 지표 (KPI)</h2>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">📊</span> North Star Metric</h3>
+    <div class="metric-row">
+      <div class="metric"><div class="value">WAU</div><div class="label">주간 활성 사용자</div></div>
+      <div class="metric"><div class="value" style="color:var(--accent-2)">D30</div><div class="label">30일 리텐션</div></div>
+      <div class="metric"><div class="value" style="color:var(--accent-3)">ARPU</div><div class="label">사용자당 수익</div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3><span class="icon">🎯</span> 레이어별 지표</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Layer</th><th>핵심 지표</th><th>세부 지표</th></tr></thead>
+        <tbody>
+          <tr><td>피드</td><td>비회원→가입 전환율</td><td>피드 체류 시간, 좋아요/댓글, 캐릭터당 팔로워 수, 릴스 완주율, 닉네임 언급 포스팅 도달률</td></tr>
+          <tr><td>DM</td><td>세션당 턴 수</td><td>일 DM 횟수, 평균 대화 시간, 음성 비율, 기억 재활용률, 읽씹 후 복귀율, 차단 발생률</td></tr>
+          <tr><td>소셜</td><td>친구 소개 수락률</td><td>댓글 교류율, 그룹 DM 활성률, 소셜 그래프 밀도</td></tr>
+          <tr><td>선물</td><td>MAU 대비 구매율</td><td>객단가, 재구매율, 쿠폰 사용률, 브랜드별 전환</td></tr>
+          <tr><td>건강성</td><td>일 3시간 초과 비율 &lt;5%</td><td>월 과금 상한 도달 &lt;3%, 기억 정확도 &gt;90%, 페르소나 일관성 &gt;85점</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</div><!-- .content -->
+
+<footer>
+  <p>Allys — Service Planning Document v2.0</p>
+  <p style="margin-top:8px;">Confidential &middot; For Internal Use Only</p>
+</footer>
+
+</body>
+</html>
